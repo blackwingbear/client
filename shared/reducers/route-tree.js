@@ -31,13 +31,20 @@ function routeDefReducer (routeDef, action) {
 function routeStateReducer (routeDef, routeState, action) {
   switch (action.type) {
     case Constants.setRouteDef:
+      // If no routeState (app startup), set state to default routes.
+      if (!routeState) {
+        return routeSetProps(action.payload.routeDef, null)
+      }
+
+      // If a state exists, try to navigate it with the new defs (if possible),
+      // falling back to default routes.
       let newRouteState
       try {
         newRouteState = routeNavigate(action.payload.routeDef, routeState, getPath(routeState))
       } catch (err) {
         if (err instanceof InvalidRouteError) {
           console.warn('New route tree mismatches current state. Resetting route state.')
-          newRouteState = routeNavigate(action.payload.routeDef, null, [])
+          newRouteState = routeSetProps(action.payload.routeDef, null)
         } else {
           throw err
         }
@@ -51,8 +58,8 @@ function routeStateReducer (routeDef, routeState, action) {
       return routeNavigate(routeDef, routeState, action.payload.path, action.payload.parentPath)
 
     case Constants.navigateAppend: {
-      const path = getPath(routeState)
-      return routeNavigate(routeDef, routeState, action.payload.path, path || action.payload.parentPath)
+      const path = getPath(routeState, action.payload.parentPath)
+      return routeNavigate(routeDef, routeState, action.payload.path, path)
     }
 
     case Constants.navigateUp: {

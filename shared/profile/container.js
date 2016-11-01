@@ -41,32 +41,6 @@ type EitherProps<P> = {
 }
 
 class ProfileContainer extends PureComponent<void, EitherProps<Props>, void> {
-  static parseRoute (currentPath, uri) {
-    //TODO: replace
-    // profileIsRoot
-    return {
-      componentAtTop: {
-        title: 'Profile',
-        props: {
-          userOverride: currentPath.get('userOverride'),
-          profileIsRoot: !!uri.count() && uri.last().get('path') === 'root',
-        },
-      },
-      subRoutes: {
-        'editprofile': EditProfile,
-        'editavatar': EditAvatar,
-        ProveEnterUsername,
-        ProveWebsiteChoice,
-        Revoke: RevokeContainer,
-        PostProof,
-        ConfirmOrPending,
-        pgp: {
-          parseRoute: () => ({parseNextRoute: pgpRouter}),
-        },
-      },
-    }
-  }
-
   render () {
     if (this.props.type === 'error') {
       return <ErrorComponent error={this.props.propError} />
@@ -96,12 +70,12 @@ export default connect(
     onUserClick: (username, uid) => { dispatch(onUserClick(username, uid)) },
     onBack: () => { dispatch(navigateUp()) },
     onFolderClick: folder => { dispatch(openInKBFS(folder.path)) },
-    onEditProfile: () => { dispatch(navigateAppend([{selected: 'editprofile'}])) },  //TODO
-    onEditAvatar: () => { dispatch(navigateAppend([{selected: 'editavatar'}])) },  //TODO
+    onEditProfile: () => { dispatch(navigateAppend([{selected: 'editProfile'}])) },
+    onEditAvatar: () => { dispatch(navigateAppend([{selected: 'editAvatar'}])) },
     onMissingProofClick: (missingProof: MissingProof) => { dispatch(addProof(missingProof.type)) },
     onRecheckProof: (proof: Proof) => { dispatch(checkSpecificProof(proof && proof.id)) },
     onRevokeProof: (proof: Proof) => {
-      //TODO dispatch(routeAppend({path: 'Revoke', platform: proof.type, platformHandle: proof.name, proofId: proof.id}))
+      dispatch(navigateAppend([{selected: 'revoke', platform: proof.type, platformHandle: proof.name, proofId: proof.id}], [profileTab]))
     },
     onViewProof: (proof: Proof) => { dispatch(openProofUrl(proof)) },
     getProfile: username => dispatch(getProfile(username)),

@@ -100,14 +100,9 @@ export type PropsPath = I.IndexedIterable<{type: 'next' | 'navigate', next: stri
 function _routeSet (routeDef: RouteDefNode, routeState: ?RouteStateNode, path: PropsPath): RouteStateNode {
   const pathHead = path && path.first()
 
-  let newRouteState
-  if (!routeState) {
-    newRouteState = new RouteStateNode({selected: routeDef.defaultSelected})
-  } else {
-    newRouteState = routeState
-    if (pathHead && pathHead.type === 'navigate') {
-      newRouteState = routeState.set('selected', pathHead.next)
-    }
+  let newRouteState = routeState || new RouteStateNode({selected: routeDef.defaultSelected})
+  if (pathHead && pathHead.type === 'navigate') {
+    newRouteState = newRouteState.set('selected', pathHead.next)
   }
 
   const childName = pathHead && pathHead.type === 'next' ? pathHead.next : newRouteState.selected
@@ -195,9 +190,17 @@ export function checkRouteState (routeDef: RouteDefNode, routeState: ?RouteState
   }
 }
 
-export function getPath (routeState: RouteStateNode) {
+export function getPath (routeState: RouteStateNode, parentPath?: Path) {
   const path = []
   let curState = routeState
+
+  if (parentPath) {
+    I.Seq(parentPath).forEach(next => {
+      curState = curState.getChild(next)
+      path.push(next)
+    })
+  }
+
   while (curState && curState.selected !== null) {
     path.push(curState.selected)
     curState = curState.getChild(curState.selected)

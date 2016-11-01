@@ -277,7 +277,7 @@ function addProof (platform: PlatformsExpandedType): AsyncAction {
         dispatch(_addServiceProof(platform))
         break
       case 'pgp':
-        dispatch(navigateAppend(['pgp', 'choice']))
+        dispatch(navigateAppend(['pgp'], [profileTab]))
     }
   }
 }
@@ -430,7 +430,7 @@ function _checkProof (sigID: string, currentlyAdding: boolean): AsyncAction {
               dispatch(_updateErrorText("We couldn't find your proof. Please retry!"))
             } else {
               dispatch(_updateProofStatus(found, status))
-              dispatch(navigateTo([{selected: 'ConfirmOrPending'}], [profileTab]))
+              dispatch(navigateTo([{selected: 'confirmOrPending'}], [profileTab]))
             }
           }
         }
@@ -584,7 +584,7 @@ function * dropPgpSaga (action: DropPgp): SagaGenerator<any, any> {
 
 // TODO(mm) handle error better
 function * generatePgpSaga (): SagaGenerator<any, any> {
-  yield put(navigateAppend(['generate']))
+  yield put(navigateAppend(['generate'], [profileTab, 'pgp']))
 
   const channelConfig = singleFixedChannelConfig(['keybase.1.pgpUi.keyGenerated', 'keybase.1.pgpUi.shouldPushPrivate', 'keybase.1.pgpUi.finished', 'finished'])
 
@@ -602,7 +602,7 @@ function * generatePgpSaga (): SagaGenerator<any, any> {
 
     if (cancel) {
       closeChannelMap(generatePgpKeyChanMap)
-      yield put(navigateTo([]))
+      yield put(navigateTo([], [profileTab]))
       return
     }
 
@@ -610,7 +610,7 @@ function * generatePgpSaga (): SagaGenerator<any, any> {
     const publicKey = keyGenerated.params.key.key
 
     yield put({type: Constants.updatePgpPublicKey, payload: {publicKey}})
-    yield put(navigateAppend(['finished']))
+    yield put(navigateAppend(['finished'], [profileTab, 'pgp']))
 
     // $ForceType
     const finishedAction: FinishedWithKeyGen = yield take(Constants.finishedWithKeyGen)
@@ -624,7 +624,7 @@ function * generatePgpSaga (): SagaGenerator<any, any> {
     const {response: finishedResponse} = yield takeFromChannelMap(generatePgpKeyChanMap, 'keybase.1.pgpUi.finished')
     yield call([finishedResponse, finishedResponse.result])
 
-    yield put(navigateTo([]))
+    yield put(navigateTo([], [profileTab]))
   } catch (e) {
     closeChannelMap(generatePgpKeyChanMap)
     console.log('error in generating pgp key', e)

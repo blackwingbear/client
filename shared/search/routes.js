@@ -1,6 +1,6 @@
 // @flow
 import {RouteDefNode} from '../route-tree'
-import profileRoutes from '../profile/routes'
+import {profileRoutes} from '../profile/routes'
 import Search from './'
 
 const routeTree = new RouteDefNode({
