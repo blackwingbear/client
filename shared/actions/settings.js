@@ -200,11 +200,11 @@ function * sendInviteSaga (invitesSendAction: InvitesSend): SagaGenerator<any, a
         payload: {email, invitationId},
       }: InvitesSent))
       // TODO: if the user changes their route while working, this may lead to an invalid route
-      yield put(navigateAppend({
+      yield put(navigateAppend([{
         selected: 'inviteSent',
         email,
         link,
-      }))
+      }]))
     }
   } catch (e) {
     console.warn('Error sending an invite:', e)

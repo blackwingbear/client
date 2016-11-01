@@ -14,6 +14,6 @@ export default connect(
     isModal: routeLeafTags.modal,
   }),
   (dispatch, {routePath}: RouteProps<*, *>) => ({
-    onTabChange: tab => { dispatch(switchTo(...routePath.push(tab).toArray())) },
+    onTabChange: tab => { dispatch(switchTo(routePath.push(tab))) },
   })
 )(SettingsContainer)

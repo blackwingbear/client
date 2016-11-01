@@ -73,7 +73,7 @@ class Files extends Component<void, Props, State> {
         youCanUnlock={folder.youCanUnlock}
         onBack={() => this.props.navigateUp()}
         openCurrentFolder={openCurrentFolder}
-        onClickPaperkey={device => this.props.navigateAppend({selected: 'paperkey', name: device.name})}
+        onClickPaperkey={device => this.props.navigateAppend([{selected: 'paperkey', name: device.name}])}
         ignoreCurrentFolder={ignoreCurrentFolder}
         unIgnoreCurrentFolder={unIgnoreCurrentFolder}
         recentFilesSection={folder.recentFiles} // TODO (AW): integrate recent files once the service provides this data

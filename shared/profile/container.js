@@ -96,8 +96,8 @@ export default connect(
     onUserClick: (username, uid) => { dispatch(onUserClick(username, uid)) },
     onBack: () => { dispatch(navigateUp()) },
     onFolderClick: folder => { dispatch(openInKBFS(folder.path)) },
-    onEditProfile: () => { dispatch(navigateAppend({selected: 'editprofile'})) },  //TODO
-    onEditAvatar: () => { dispatch(navigateAppend({selected: 'editavatar'})) },  //TODO
+    onEditProfile: () => { dispatch(navigateAppend([{selected: 'editprofile'}])) },  //TODO
+    onEditAvatar: () => { dispatch(navigateAppend([{selected: 'editavatar'}])) },  //TODO
     onMissingProofClick: (missingProof: MissingProof) => { dispatch(addProof(missingProof.type)) },
     onRecheckProof: (proof: Proof) => { dispatch(checkSpecificProof(proof && proof.id)) },
     onRevokeProof: (proof: Proof) => {

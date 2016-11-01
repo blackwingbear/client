@@ -31,8 +31,8 @@ class Folders extends Component<void, Props, void> {
     return (
       <Render
         {...this.props.folderState}
-        onClick={path => this.props.navigateAppend(path)}  //FIXME?
-        onRekey={path => this.props.navigateAppend(path)}
+        onClick={path => this.props.navigateAppend([path])}  //FIXME?
+        onRekey={path => this.props.navigateAppend([path])}
         onOpen={path => this.props.openInKBFS(path)}
         onSwitchTab={showingPrivate => this.props.switchTab(showingPrivate)}
         showingPrivate={this.props.showingPrivate}
@@ -56,9 +56,9 @@ const ConnectedFolders = connect(
   }),
   (dispatch: any, {routePath, routeState, setRouteState}: OwnProps) => ({
     favoriteList: () => { dispatch(favoriteList()) },
-    navigateAppend: path => { dispatch(navigateAppend({selected: 'files', path})) },
+    navigateAppend: path => { dispatch(navigateAppend([{selected: 'files', path}])) },
     openInKBFS: path => { dispatch(openInKBFS(path)) },
-    switchTab: showingPrivate => { dispatch(switchTo(...routePath.pop().push(showingPrivate ? 'private' : 'public').toArray())) },
+    switchTab: showingPrivate => { dispatch(switchTo(routePath.pop().push(showingPrivate ? 'private' : 'public'))) },
     onToggleShowIgnored: () => { setRouteState({showingIgnored: !routeState.showingIgnored}) },
   })
 )(Folders)

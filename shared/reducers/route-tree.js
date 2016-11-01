@@ -33,11 +33,11 @@ function routeStateReducer (routeDef, routeState, action) {
     case Constants.setRouteDef:
       let newRouteState
       try {
-        newRouteState = routeNavigate(action.payload.routeDef, getPath(routeState), routeState)
+        newRouteState = routeNavigate(action.payload.routeDef, routeState, getPath(routeState))
       } catch (err) {
         if (err instanceof InvalidRouteError) {
           console.warn('New route tree mismatches current state. Resetting route state.')
-          newRouteState = routeNavigate(action.payload.routeDef, [], null)
+          newRouteState = routeNavigate(action.payload.routeDef, null, [])
         } else {
           throw err
         }
@@ -45,27 +45,27 @@ function routeStateReducer (routeDef, routeState, action) {
       return newRouteState
 
     case Constants.switchTo:
-      return routeSetProps(routeDef, action.payload.path, routeState)
+      return routeSetProps(routeDef, routeState, action.payload.path, action.payload.parentPath)
 
     case Constants.navigateTo:
-      return routeNavigate(routeDef, action.payload.path, routeState)
+      return routeNavigate(routeDef, routeState, action.payload.path, action.payload.parentPath)
 
     case Constants.navigateAppend: {
       const path = getPath(routeState)
-      return routeNavigate(routeDef, path.concat(...action.payload.path), routeState)
+      return routeNavigate(routeDef, routeState, action.payload.path, path || action.payload.parentPath)
     }
 
     case Constants.navigateUp: {
       const path = getPath(routeState)
-      const newRouteState = routeClear(path, routeState)
-      return routeNavigate(routeDef, path.skipLast(1), newRouteState)
+      const newRouteState = routeClear(routeState, path)
+      return routeNavigate(routeDef, newRouteState, path.skipLast(1))
     }
 
     case Constants.setRouteState:
-      return routeSetState(routeDef, action.payload.path, routeState, action.payload.partialState)
+      return routeSetState(routeDef, routeState, action.payload.path, action.payload.partialState)
 
     case Constants.resetRoute:
-      return routeClear(action.payload.path, routeState)
+      return routeClear(routeState, action.payload.path)
 
     default:
       return routeState

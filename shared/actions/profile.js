@@ -157,13 +157,13 @@ function _updateSigID (sigID: SigID): UpdateSigID {
 
 function _askTextOrDNS (): AsyncAction {
   return (dispatch) => {
-    dispatch(navigateTo([{path: 'ProveWebsiteChoice'}], profileTab))
+    dispatch(navigateTo([{selected: 'proveWebsiteChoice'}], [profileTab]))
   }
 }
 
 function _registerBTC (): AsyncAction {
   return (dispatch) => {
-    dispatch(navigateTo([{path: 'ProveEnterUsername'}], profileTab))
+    dispatch(navigateTo([{selected: 'proveEnterUsername'}], [profileTab]))
   }
 }
 
@@ -189,7 +189,7 @@ function submitBTCAddress (): AsyncAction {
           dispatch(_updateErrorText(error.desc, error.code))
         } else {
           dispatch(_updateProofStatus(true, ProveCommonProofStatus.ok))
-          dispatch(navigateTo([{path: 'ConfirmOrPending'}], profileTab))
+          dispatch(navigateTo([{selected: 'confirmOrPending'}], [profileTab]))
         }
       },
     })
@@ -213,7 +213,7 @@ function _addServiceProof (service: ProvablePlatformsType): AsyncAction {
           if (prevError) {
             dispatch(_updateErrorText(prevError.desc, prevError.code))
           }
-          dispatch(navigateTo([{path: 'ProveEnterUsername'}], profileTab))
+          dispatch(navigateTo([{selected: 'proveEnterUsername'}], [profileTab]))
         },
         'keybase.1.proveUi.outputInstructions': ({instructions, proof}, response) => {
           if (service === 'dnsOrGenericWebSite') { // We don't get this directly (yet) so we parse this out
@@ -228,7 +228,7 @@ function _addServiceProof (service: ProvablePlatformsType): AsyncAction {
 
           dispatch(_updateProofText(proof))
           outputInstructionsResponse = response
-          dispatch(navigateTo([{path: 'PostProof'}], profileTab))
+          dispatch(navigateTo([{selected: 'postProof'}], [profileTab]))
         },
         'keybase.1.proveUi.promptOverwrite': (_, response) => { response.result(true) },
         'keybase.1.proveUi.outputPrechecks': (_, response) => { response.result() },
@@ -277,7 +277,7 @@ function addProof (platform: PlatformsExpandedType): AsyncAction {
         dispatch(_addServiceProof(platform))
         break
       case 'pgp':
-        dispatch(routeAppend(['pgp', 'choice']))
+        dispatch(navigateAppend(['pgp', 'choice']))
     }
   }
 }
@@ -321,7 +321,7 @@ function finishRevoking (): AsyncAction {
 
 function onUserClick (username: string, uid: string): AsyncAction {
   return dispatch => {
-    dispatch(navigateAppend({selected: 'profile', username, uid}))
+    dispatch(navigateAppend([{selected: 'profile', username, uid}]))
   }
 }
 
@@ -430,7 +430,7 @@ function _checkProof (sigID: string, currentlyAdding: boolean): AsyncAction {
               dispatch(_updateErrorText("We couldn't find your proof. Please retry!"))
             } else {
               dispatch(_updateProofStatus(found, status))
-              dispatch(navigateTo([{path: 'ConfirmOrPending'}], profileTab))
+              dispatch(navigateTo([{selected: 'ConfirmOrPending'}], [profileTab]))
             }
           }
         }
@@ -584,7 +584,7 @@ function * dropPgpSaga (action: DropPgp): SagaGenerator<any, any> {
 
 // TODO(mm) handle error better
 function * generatePgpSaga (): SagaGenerator<any, any> {
-  yield put(routeAppend('generate'))
+  yield put(navigateAppend(['generate']))
 
   const channelConfig = singleFixedChannelConfig(['keybase.1.pgpUi.keyGenerated', 'keybase.1.pgpUi.shouldPushPrivate', 'keybase.1.pgpUi.finished', 'finished'])
 
@@ -610,7 +610,7 @@ function * generatePgpSaga (): SagaGenerator<any, any> {
     const publicKey = keyGenerated.params.key.key
 
     yield put({type: Constants.updatePgpPublicKey, payload: {publicKey}})
-    yield put(routeAppend('finished'))
+    yield put(navigateAppend(['finished']))
 
     // $ForceType
     const finishedAction: FinishedWithKeyGen = yield take(Constants.finishedWithKeyGen)

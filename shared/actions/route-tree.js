@@ -1,9 +1,7 @@
 // @flow
 import * as Constants from '../constants/route-tree'
-import type {RouteDefNode, Path} from '../route-tree'
+import type {RouteDefNode, Path, PathLike} from '../route-tree'
 import type {Action} from '../constants/types/flux'
-
-type PathOrProps = string | {selected: string}
 
 // Set the route tree
 export function setRouteDef (routeDef: RouteDefNode): Action {
@@ -16,10 +14,10 @@ export function setRouteDef (routeDef: RouteDefNode): Action {
 // Switch to a new parent path, keeping the subpath. E.g.:
 // switchTo('settings') will navigate to settings tab and whatever subpath was
 // previously selected
-export function switchTo (...path: Array<string>): Action {
+export function switchTo (path: Path, parentPath?: Path): Action {
   return {
     type: Constants.switchTo,
-    payload: {path},
+    payload: {path, parentPath},
   }
 }
 
@@ -28,18 +26,18 @@ export function switchTo (...path: Array<string>): Action {
 //   navigateTo('foo', 'bar')
 // Or objects with route props:
 //   navigateTo({selected: 'foo', prop1: 'hello'}, {selected: 'bar', prop2: 'world'})
-export function navigateTo (...path: Array<PathOrProps>): Action {
+export function navigateTo (path: PathLike, parentPath?: Path): Action {
   return {
     type: Constants.navigateTo,
-    payload: {path},
+    payload: {path, parentPath},
   }
 }
 
 // Navigate to a path relative to the current path.
-export function navigateAppend (...path: Array<PathOrProps>): Action {
+export function navigateAppend (path: PathLike, parentPath?: Path): Action {
   return {
     type: Constants.navigateAppend,
-    payload: {path},
+    payload: {path, parentPath},
   }
 }
 
@@ -60,7 +58,7 @@ export function setRouteState (path: Path, partialState: any): Action {
 }
 
 // Reset the props and state for a subtree.
-export function resetRoute (...path: Array<string>): Action {
+export function resetRoute (path: Path): Action {
   return {
     type: Constants.resetRoute,
     payload: {path},

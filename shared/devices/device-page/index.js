@@ -63,7 +63,7 @@ export default connect(
   (dispatch: any) => {
     return {
       ...bindActionCreators(devicesActions, dispatch),
-      showRemoveDevicePage: device => dispatch(navigateAppend({selected: 'removeDevice', device})),
+      showRemoveDevicePage: device => dispatch(navigateAppend([{selected: 'removeDevice', device}])),
       onBack: () => dispatch(navigateUp()),
     }
   }

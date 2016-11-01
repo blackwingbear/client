@@ -47,7 +47,7 @@ export default connect(
     return {
       loadDevices: () => dispatch(loadDevices()),
       onToggleShowRevoked: () => { setRouteState({showingRevoked: !routeState.showingRevoked}) },
-      showExistingDevicePage: device => dispatch(navigateAppend({selected: 'devicePage', device})),
+      showExistingDevicePage: device => dispatch(navigateAppend([{selected: 'devicePage', device}])),
       addNewPhone: () => dispatch(addNewPhone()),
       addNewComputer: () => dispatch(addNewComputer()),
       addNewPaperKey: () => dispatch(addNewPaperKey()),

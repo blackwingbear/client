@@ -74,8 +74,8 @@ const _RouteStateNode = I.Record({
 })
 
 export class RouteStateNode extends _RouteStateNode {
-  constructor ({selected, props, state}: RouteStateParams) {
-    super({selected, props, state})
+  constructor (data: RouteStateParams) {
+    super(data)
   }
 
   getChild (name: string): RouteStateNode {
@@ -89,11 +89,15 @@ export class RouteStateNode extends _RouteStateNode {
 
 export class InvalidRouteError extends Error {}
 
-export type Path = Iterable<string>
-type PathLike = Iterable<string | {selected: string | null}>
-export type PropsPath = I.IndexedIterable<{selected: string | null, props?: {}}>
+// Explicit list of iterable types to accept. We don't want to allow strings
+// since navigateTo('foo') instead of navigateTo(['foo']) is an easy mistake to
+// make.
+type PathIterable<X> = I.IndexedSeq<X> | I.List<X> | Array<X>
+export type Path = PathIterable<string>
+export type PathLike = PathIterable<string | {selected: string | null}>
+export type PropsPath = I.IndexedIterable<{type: 'next' | 'navigate', next: string | null, props?: {}}>
 
-function _routeSet (routeDef: RouteDefNode, path: PropsPath, routeState: ?RouteStateNode): RouteStateNode {
+function _routeSet (routeDef: RouteDefNode, routeState: ?RouteStateNode, path: PropsPath): RouteStateNode {
   const pathHead = path && path.first()
 
   let newRouteState
@@ -101,20 +105,20 @@ function _routeSet (routeDef: RouteDefNode, path: PropsPath, routeState: ?RouteS
     newRouteState = new RouteStateNode({selected: routeDef.defaultSelected})
   } else {
     newRouteState = routeState
-    if (pathHead) {
-      newRouteState = routeState.set('selected', pathHead.selected)
+    if (pathHead && pathHead.type === 'navigate') {
+      newRouteState = routeState.set('selected', pathHead.next)
     }
   }
 
-  const selected = newRouteState.selected
-  if (selected !== null) {
-    const childDef = routeDef.getChild(selected)
+  const childName = pathHead && pathHead.type === 'next' ? pathHead.next : newRouteState.selected
+  if (childName !== null) {
+    const childDef = routeDef.getChild(childName)
     if (!childDef) {
-      throw new InvalidRouteError(`Invalid route selected: ${selected}`)
+      throw new InvalidRouteError(`Invalid route child: ${childName}`)
     }
 
-    newRouteState = newRouteState.updateChild(selected, childState => {
-      let newChild = _routeSet(childDef, path.skip(1), childState)
+    newRouteState = newRouteState.updateChild(childName, childState => {
+      let newChild = _routeSet(childDef, childState, path.skip(1))
       if (pathHead && pathHead.hasOwnProperty('props')) {
         newChild = newChild.set('props', I.fromJS(pathHead.props))
       }
@@ -125,33 +129,36 @@ function _routeSet (routeDef: RouteDefNode, path: PropsPath, routeState: ?RouteS
   return newRouteState
 }
 
-export function routeSetProps (routeDef: RouteDefNode, pathProps: PathLike, routeState: ?RouteStateNode): RouteStateNode {
+export function routeSetProps (routeDef: RouteDefNode, routeState: ?RouteStateNode, pathProps: PathLike, parentPath: ?Path): RouteStateNode {
   const pathSeq = I.Seq(pathProps).map(item => {
     if (typeof item === 'string') {
-      return {selected: item}
+      return {type: 'navigate', next: item}
     } else {
       const {selected, ...props} = item
-      return {selected, props}
+      return {type: 'navigate', next: selected, props}
     }
   })
-  return _routeSet(routeDef, pathSeq, routeState)
+  const parentPathSeq = I.Seq(parentPath || []).map(item => {
+    return {type: 'next', next: item}
+  })
+  return _routeSet(routeDef, routeState, parentPathSeq.concat(pathSeq))
 }
 
-export function routeNavigate (routeDef: RouteDefNode, pathProps: PathLike, routeState: ?RouteStateNode): RouteStateNode {
-  return routeSetProps(routeDef, I.List(pathProps).push({selected: null}), routeState)
+export function routeNavigate (routeDef: RouteDefNode, routeState: ?RouteStateNode, pathProps: PathLike, parentPath: ?Path): RouteStateNode {
+  return routeSetProps(routeDef, routeState, I.List(pathProps).push({selected: null}), parentPath)
 }
 
-export function routeSetState (routeDef: RouteDefNode, path: Path, routeState: RouteStateNode, partialState: {}): RouteStateNode {
+export function routeSetState (routeDef: RouteDefNode, routeState: RouteStateNode, path: Path, partialState: {}): RouteStateNode {
   const pathSeq = I.Seq(path)
   if (!pathSeq.size) {
     return routeState.update('state', state => state.merge(partialState))
   }
   return routeState.updateChild(pathSeq.first(),
-    childState => routeSetState(routeDef, pathSeq.skip(1), childState, partialState)
+    childState => routeSetState(routeDef, childState, pathSeq.skip(1), partialState)
   )
 }
 
-export function routeClear (path: Path, routeState: ?RouteStateNode): ?RouteStateNode {
+export function routeClear (routeState: ?RouteStateNode, path: Path): ?RouteStateNode {
   if (!routeState) {
     return null
   }
@@ -160,7 +167,7 @@ export function routeClear (path: Path, routeState: ?RouteStateNode): ?RouteStat
     return null
   }
   return routeState.updateChild(pathSeq.first(),
-    childState => routeClear(pathSeq.skip(1), childState)
+    childState => routeClear(childState, pathSeq.skip(1))
   )
 }
 

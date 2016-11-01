@@ -29,5 +29,5 @@ export default connect(
     onReset: () => engine().reset(),
     onSignOut: () => dispatch(logout()),
     onBack: () => dispatch(navigateUp()),
-    onDumbSheet: () => dispatch(navigateAppend('dumbSheet')),
+    onDumbSheet: () => dispatch(navigateAppend(['dumbSheet'])),
   }))(DevMenu)

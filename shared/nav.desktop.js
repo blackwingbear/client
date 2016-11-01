@@ -9,6 +9,7 @@ import {folderTab} from './constants/tabs'
 import {switchTo} from './actions/route-tree'
 import TabBar from './tab-bar/index.render'
 
+import type {VisibleTab} from './constants/tabs'
 import type {Props} from './nav'
 
 function Nav (props: Props) {
@@ -45,6 +46,6 @@ export default connect(
     folderBadge: publicBadge + privateBadge,
   }),
   (dispatch: any) => ({
-    switchTab: tab => dispatch(switchTo(tab)),
+    switchTab: (tab: VisibleTab) => dispatch(switchTo([tab])),
   })
 )(Nav)
