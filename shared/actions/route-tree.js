@@ -41,6 +41,14 @@ export function navigateAppend (path: PathLike, parentPath?: Path): Action {
   }
 }
 
+// Navigate to a path, resetting any state underneath it.
+export function navigateReset (path: PathLike): Action {
+  return {
+    type: Constants.navigateReset,
+    payload: {path},
+  }
+}
+
 // Navigate one step up from the current path.
 export function navigateUp (): Action {
   return {

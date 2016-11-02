@@ -55,6 +55,11 @@ function routeStateReducer (routeDef, routeState, action) {
       return routeNavigate(routeDef, routeState, action.payload.path, path)
     }
 
+    case Constants.navigateReset: {
+      const newRouteState = routeClear(routeState, action.payload.path)
+      return routeNavigate(routeDef, newRouteState, action.payload.path)
+    }
+
     case Constants.navigateUp: {
       const path = getPath(routeState)
       const newRouteState = routeClear(routeState, path)
