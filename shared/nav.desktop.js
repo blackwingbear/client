@@ -6,7 +6,7 @@ import {Box} from './common-adapters'
 import GlobalError from './global-errors/container'
 
 import {folderTab} from './constants/tabs'
-import {switchTo} from './actions/route-tree'
+import {navigateTo, switchTo} from './actions/route-tree'
 import TabBar from './tab-bar/index.render'
 
 import type {VisibleTab} from './constants/tabs'
@@ -45,7 +45,7 @@ export default connect(
     menuBadge,
     folderBadge: publicBadge + privateBadge,
   }),
-  (dispatch: any) => ({
-    switchTab: (tab: VisibleTab) => dispatch(switchTo([tab])),
+  (dispatch: any, ownProps) => ({
+    switchTab: (tab: VisibleTab) => ownProps.routeSelected === tab ? dispatch(navigateTo([tab])) : dispatch(switchTo([tab])),
   })
 )(Nav)
