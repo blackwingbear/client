@@ -8,17 +8,6 @@ import {connect} from 'react-redux'
 import {navigateUp} from '../../actions/route-tree'
 
 class DeviceRevoke extends Component<void, Props, void> {
-  static parseRoute (currentPath) {
-    return {
-      componentAtTop: {
-        title: 'Device revoke',
-        props: {
-          device: currentPath.get('device'),
-        },
-      },
-    }
-  }
-
   render () {
     const device = this.props.device
     return <Render

@@ -4,7 +4,7 @@ import HiddenString from '../util/hidden-string'
 import {Map, is} from 'immutable'
 import {devicesTab, loginTab} from '../constants/tabs'
 
-import {navigateTo, navigateUp, switchTab} from './router'
+import {navigateTo, navigateUp} from './route-tree'
 import {setRevokedSelf} from './login'
 import {takeEvery, takeLatest} from 'redux-saga'
 import {call, put, select, fork} from 'redux-saga/effects'
@@ -64,8 +64,7 @@ function * _deviceListSaga (): SagaGenerator<any, any> {
 
 function * _deviceRemoveSaga (removeAction: RemoveDevice): SagaGenerator<any, any> {
   // Record our current route, only navigate away later if it's unchanged.
-  const activeTab = yield select(state => state.router && state.router.get('activeTab'))
-  const beforeUri = yield select(state => state.router.get('tabs').get(activeTab).get('uri'))
+  const beforeRouteState = yield select(state => state.routeTree.routeState)
 
   // Revoking the current device uses the "deprovision" RPC instead.
   const {currentDevice, name, deviceID} = removeAction.payload
@@ -82,8 +81,7 @@ function * _deviceRemoveSaga (removeAction: RemoveDevice): SagaGenerator<any, an
         }: DeviceRemoved))
       }
       yield call(loginDeprovisionRpcPromise, {param: {username, doRevoke: true}})
-      yield put(navigateTo([], loginTab))
-      yield put(switchTab(loginTab))
+      yield put(navigateTo([loginTab]))
       yield put(setRevokedSelf(name))
       yield put(({
         type: Constants.deviceRemoved,
@@ -118,9 +116,9 @@ function * _deviceRemoveSaga (removeAction: RemoveDevice): SagaGenerator<any, an
   }
   yield put(loadDevices())
 
-  const afterUri = yield select(state => state.router.get('tabs').get(activeTab).get('uri'))
-  if (is(beforeUri, afterUri)) {
-    yield put(navigateUp(devicesTab, Map({path: 'root'})))
+  const afterRouteState = yield select(state => state.routeTree.routeState)
+  if (is(beforeRouteState, afterRouteState)) {
+    yield put(navigateTo([devicesTab]))
   }
 }
 

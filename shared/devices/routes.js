@@ -20,6 +20,7 @@ const routeTree = new RouteDefNode({
       component: DevicePage,
       children: {
         removeDevice: {
+          title: 'Device Revoke',
           component: RemoveDevice,
         },
       },
