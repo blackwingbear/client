@@ -51,8 +51,12 @@ function routeStateReducer (routeDef, routeState, action) {
       return routeNavigate(routeDef, routeState, action.payload.path, action.payload.parentPath)
 
     case Constants.navigateAppend: {
-      const path = getPath(routeState, action.payload.parentPath)
-      return routeNavigate(routeDef, routeState, action.payload.path, path)
+      const parentPath = I.List(action.payload.parentPath)
+      let curPath = getPath(routeState, parentPath)
+      if (curPath.size < parentPath.size) {
+        curPath = parentPath
+      }
+      return routeNavigate(routeDef, routeState, action.payload.path, curPath)
     }
 
     case Constants.navigateReset: {

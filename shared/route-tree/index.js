@@ -198,6 +198,9 @@ export function getPath (routeState: RouteStateNode, parentPath?: Path): I.List<
   if (parentPath) {
     I.Seq(parentPath).forEach(next => {
       curState = curState.getChild(next)
+      if (!curState) {
+        return path
+      }
       path.push(next)
     })
   }
