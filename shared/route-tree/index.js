@@ -102,7 +102,7 @@ function _routeSet (routeDef: RouteDefNode, routeState: ?RouteStateNode, path: P
 
   let newRouteState = routeState || new RouteStateNode({selected: routeDef.defaultSelected})
   if (pathHead && pathHead.type === 'navigate') {
-    newRouteState = newRouteState.set('selected', pathHead.next)
+    newRouteState = newRouteState.set('selected', pathHead.next || routeDef.defaultSelected)
   }
 
   const childName = pathHead && pathHead.type === 'next' ? pathHead.next : newRouteState.selected

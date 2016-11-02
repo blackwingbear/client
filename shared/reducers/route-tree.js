@@ -31,13 +31,6 @@ function routeDefReducer (routeDef, action) {
 function routeStateReducer (routeDef, routeState, action) {
   switch (action.type) {
     case Constants.setRouteDef:
-      // If no routeState (app startup), set state to default routes.
-      if (!routeState) {
-        return routeSetProps(action.payload.routeDef, null, [])
-      }
-
-      // If a state exists, try to navigate it with the new defs (if possible),
-      // falling back to default routes.
       let newRouteState
       try {
         newRouteState = routeNavigate(action.payload.routeDef, routeState, getPath(routeState))
