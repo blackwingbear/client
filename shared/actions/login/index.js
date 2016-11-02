@@ -111,7 +111,7 @@ export function login (): AsyncAction {
                 payload: error,
               })
 
-              if (!(error.code === InputCancelError.code)) {
+              if (error.code !== InputCancelError.code) {
                 dispatch(routeAppend({
                   parseRoute: {
                     componentAtTop: {
