@@ -1,5 +1,6 @@
 // @flow
 import * as I from 'immutable'
+import * as CommonConstants from '../constants/common'
 import * as Constants from '../constants/route-tree'
 import {
   InvalidRouteError,
@@ -30,6 +31,9 @@ function routeDefReducer (routeDef, action) {
 
 function routeStateReducer (routeDef, routeState, action) {
   switch (action.type) {
+    case CommonConstants.resetStore:
+      return routeSetProps(routeDef, null, [])
+
     case Constants.setRouteDef:
       let newRouteState
       try {
