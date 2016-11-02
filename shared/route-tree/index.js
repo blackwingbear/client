@@ -94,7 +94,8 @@ export class InvalidRouteError extends Error {}
 // make.
 type PathIterable<X> = I.IndexedSeq<X> | I.List<X> | Array<X>
 export type Path = PathIterable<string>
-export type PathLike = [] | Path | PathIterable<string | {selected: string | null}>
+export type PathLike = PathIterable<string | {selected: string | null}>
+type PathLikeParam = [] | Path | PathLike  // Flow doesn't accept Path as a subtype of PathLike, so be explicit here.
 export type PropsPath = I.IndexedIterable<{type: 'next' | 'navigate', next: string | null, props?: {}}>
 
 function _routeSet (routeDef: RouteDefNode, routeState: ?RouteStateNode, path: PropsPath): RouteStateNode {
@@ -124,7 +125,7 @@ function _routeSet (routeDef: RouteDefNode, routeState: ?RouteStateNode, path: P
   return newRouteState
 }
 
-export function routeSetProps (routeDef: RouteDefNode, routeState: ?RouteStateNode, pathProps: PathLike, parentPath: ?Path): RouteStateNode {
+export function routeSetProps (routeDef: RouteDefNode, routeState: ?RouteStateNode, pathProps: PathLikeParam, parentPath: ?Path): RouteStateNode {
   const pathSeq = I.Seq(pathProps).map(item => {
     if (typeof item === 'string') {
       return {type: 'navigate', next: item}
@@ -139,7 +140,7 @@ export function routeSetProps (routeDef: RouteDefNode, routeState: ?RouteStateNo
   return _routeSet(routeDef, routeState, parentPathSeq.concat(pathSeq))
 }
 
-export function routeNavigate (routeDef: RouteDefNode, routeState: ?RouteStateNode, pathProps: PathLike, parentPath: ?Path): RouteStateNode {
+export function routeNavigate (routeDef: RouteDefNode, routeState: ?RouteStateNode, pathProps: PathLikeParam, parentPath: ?Path): RouteStateNode {
   return routeSetProps(routeDef, routeState, I.List(pathProps).push({selected: null}), parentPath)
 }
 
