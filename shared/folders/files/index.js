@@ -41,7 +41,10 @@ class Files extends Component<void, Props, State> {
     this.state = {
       visiblePopupMenu: false,
     }
-    this._checkFolderExistence(props)
+    setImmediate(() => {
+      // FIXME: we shouldn't be navigating when a component mounts
+      this._checkFolderExistence(props)
+    })
   }
 
   componentWillReceiveProps (nextProps) {
