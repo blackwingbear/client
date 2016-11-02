@@ -45,7 +45,10 @@ export default connect(
     menuBadge,
     folderBadge: publicBadge + privateBadge,
   }),
-  (dispatch: any, ownProps) => ({
-    switchTab: (tab: VisibleTab) => ownProps.routeSelected === tab ? dispatch(navigateReset([tab])) : dispatch(switchTo([tab])),
+  (dispatch: any, {routeSelected, routePath}) => ({
+    switchTab: (tab: VisibleTab) => {
+      const action = routeSelected === tab ? navigateReset : switchTo
+      dispatch(action(routePath.push(tab)))
+    }
   })
 )(Nav)
