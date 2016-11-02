@@ -94,7 +94,7 @@ export class InvalidRouteError extends Error {}
 // make.
 type PathIterable<X> = I.IndexedSeq<X> | I.List<X> | Array<X>
 export type Path = PathIterable<string>
-export type PathLike = PathIterable<string | {selected: string | null}>
+export type PathLike = [] | Path | PathIterable<string | {selected: string | null}>
 export type PropsPath = I.IndexedIterable<{type: 'next' | 'navigate', next: string | null, props?: {}}>
 
 function _routeSet (routeDef: RouteDefNode, routeState: ?RouteStateNode, path: PropsPath): RouteStateNode {
@@ -166,7 +166,7 @@ export function routeClear (routeState: ?RouteStateNode, path: Path): ?RouteStat
   )
 }
 
-export function checkRouteState (routeDef: RouteDefNode, routeState: ?RouteStateNode) {
+export function checkRouteState (routeDef: RouteDefNode, routeState: ?RouteStateNode): ?string {
   if (!routeDef) {
     return
   }
@@ -190,7 +190,7 @@ export function checkRouteState (routeDef: RouteDefNode, routeState: ?RouteState
   }
 }
 
-export function getPath (routeState: RouteStateNode, parentPath?: Path) {
+export function getPath (routeState: RouteStateNode, parentPath?: Path): I.List<string> {
   const path = []
   let curState = routeState
 
@@ -208,6 +208,6 @@ export function getPath (routeState: RouteStateNode, parentPath?: Path) {
   return I.List(path)
 }
 
-export function pathToString (path: Array<string> | I.IndexedIterable<string>) {
+export function pathToString (path: Array<string> | I.IndexedIterable<string>): string {
   return '/' + path.join('/')
 }

@@ -11,7 +11,7 @@ import {updatePgpInfo, generatePgp} from '../../actions/profile'
 import {navigateUp, navigateTo, navigateAppend} from '../../actions/route-tree'
 import * as Constants from '../../constants/profile'
 
-import type {Props as ProvePgpChoiceProps} from './prove-pgp-choice'
+import type {Props as ProvePgpChoiceProps, Options as ProvePgpChoiceOptions} from './prove-pgp-choice'
 import type {Props as InfoProps} from './add'
 import type {Props as GenerateProps} from './generating-pgp'
 import type {Props as FinishedProps} from './finished-generating-pgp'
@@ -24,7 +24,7 @@ const choiceConnector: TypedConnector<TypedState, TypedDispatch<{}>, {}, ProvePg
 export const ConnectedChoice = choiceConnector.connect(
   (state, dispatch, ownProps) => ({
     onCancel: () => { dispatch(navigateTo([])) },
-    onOptionClick: type => { dispatch(navigateAppend([type])) },
+    onOptionClick: (type: ProvePgpChoiceOptions) => { dispatch(navigateAppend([type])) },
   })
 )(ProvePgpChoice)
 

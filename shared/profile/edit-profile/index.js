@@ -8,7 +8,7 @@ import {navigateUp} from '../../actions/route-tree'
 
 import type {Props} from './render'
 
-class EditProfile extends Component<void, Props, State> {
+class EditProfile extends Component<void, Props, void> {
   onSubmit () {
     this.props.onEditProfile()
   }
@@ -22,11 +22,11 @@ class EditProfile extends Component<void, Props, State> {
       fullname={this.props.fullname}
       location={this.props.location}
       onBack={this.props.onBack}
-      onBioChange={bio => this.props.onChangeBio(bio)}
+      onBioChange={this.props.onBioChange}
       onCancel={this.props.onBack}
       onEditProfile={this.props.onEditProfile}
-      onFullnameChange={fullname => this.props.onChangeFullname(fullname)}
-      onLocationChange={location => this.props.onChangeLocation(location)}
+      onFullnameChange={this.props.onFullnameChange}
+      onLocationChange={this.props.onLocationChange}
       onSubmit={() => this.onSubmit()}
     />
   }
@@ -45,9 +45,9 @@ export default connect(
   (dispatch, {routeState, setRouteState}) => {
     return {
       onBack: () => dispatch(navigateUp()),
-      onChangeBio: bio => { setRouteState({bio}) },
-      onChangeFullname: fullname => { setRouteState({fullname}) },
-      onChangeLocation: location => { setRouteState({location}) },
+      onBioChange: bio => { setRouteState({bio}) },
+      onFullnameChange: fullname => { setRouteState({fullname}) },
+      onLocationChange: location => { setRouteState({location}) },
       onEditProfile: () => dispatch(editProfile(routeState.bio, routeState.fullname, routeState.location)),
     }
   }

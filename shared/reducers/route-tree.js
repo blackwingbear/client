@@ -33,7 +33,7 @@ function routeStateReducer (routeDef, routeState, action) {
     case Constants.setRouteDef:
       // If no routeState (app startup), set state to default routes.
       if (!routeState) {
-        return routeSetProps(action.payload.routeDef, null)
+        return routeSetProps(action.payload.routeDef, null, [])
       }
 
       // If a state exists, try to navigate it with the new defs (if possible),
@@ -44,7 +44,7 @@ function routeStateReducer (routeDef, routeState, action) {
       } catch (err) {
         if (err instanceof InvalidRouteError) {
           console.warn('New route tree mismatches current state. Resetting route state.')
-          newRouteState = routeSetProps(action.payload.routeDef, null)
+          newRouteState = routeSetProps(action.payload.routeDef, null, [])
         } else {
           throw err
         }
