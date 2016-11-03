@@ -19,7 +19,6 @@ import type {Props as FinishedProps} from './finished-generating-pgp'
 import type {Props as ImportProps} from './prove-pgp-import'
 import type {TypedDispatch} from '../../constants/types/flux'
 import type {TypedState} from '../../constants/reducer'
-import type {URI} from '../../constants/router'
 
 const choiceConnector: TypedConnector<TypedState, TypedDispatch<{}>, {}, ProvePgpChoiceProps> = new TypedConnector()
 export const ConnectedChoice = choiceConnector.connect(

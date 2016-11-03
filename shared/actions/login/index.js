@@ -83,7 +83,7 @@ function getAccounts (): AsyncAction {
 export function login (): AsyncAction {
   // See FIXME about HMR at the bottom of this file
   return (dispatch, getState) => {
-    function loginSubmit (usernameOrEmail: string): AsyncAction {
+    function loginSubmit (usernameOrEmail: string) {
       const Error = require('../../login/register/error').default
       const deviceType: DeviceType = isMobile ? 'mobile' : 'desktop'
       const onBack = response => { dispatch(cancelLogin(response)) }

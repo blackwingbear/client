@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import RenderPaperKey from './index.render'
 import {connect} from 'react-redux'
 
-import type {RouteProps} from '../../../route-tree/render-routes'
+import type {RouteProps} from '../../../route-tree/render-route'
 import type {Props, State} from './index'
 import type {TypedState} from '../../../constants/reducer'
 
