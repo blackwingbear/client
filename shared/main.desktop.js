@@ -29,42 +29,14 @@ class Main extends Component<void, Props, void> {
     this._handleKeyDown = this._handleKeyDown.bind(this)
   }
 
-  //_checkTabChanged () {
-  //  return
-  //  // TODO: replace with store state listener
-  //  if (this._checkingTab) {
-  //    return
-  //  }
-
-  //  this._checkingTab = true
-
-  //  setImmediate(() => {
-  //    this._checkingTab = false
-  //    const currentWindow = remote.getCurrentWindow()
-
-  //    if (!currentWindow) {
-  //      return
-  //    }
-
-  //    const activeTab = this._activeTab()
-
-  //    if (this._lastCheckedTab === activeTab) {
-  //      return
-  //    }
-
-  //    this._lastCheckedTab = activeTab
-
-  //    ipcRenderer.send('tabChanged', activeTab)
-  //  })
-  //}
-
   _handleKeyDown (e: SyntheticKeyboardEvent) {
     const modKey = process.platform === 'darwin' ? e.metaKey : e.ctrlKey
-    //if (modKey && e.key === 'ArrowLeft') {
-    //  e.preventDefault()
-    //  this.props.navigateBack()
-    //  return
-    //}
+    // TODO (MBG): add back once we have a back action
+    // if (modKey && e.key === 'ArrowLeft') {
+    //   e.preventDefault()
+    //   this.props.navigateBack()
+    //   return
+    // }
     if (modKey && e.key === 'ArrowUp') {
       e.preventDefault()
       this.props.navigateUp()
