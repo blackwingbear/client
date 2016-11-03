@@ -6,7 +6,6 @@ import type {CheckInviteCode, CheckUsernameEmail, CheckPassphrase, SubmitDeviceN
   Signup, ShowPaperKey, ShowSuccess, ResetSignup, RestartSignup, RequestInvite,
   StartRequestInvite, SignupWaiting} from '../constants/signup'
 import type {TypedAsyncAction, AsyncAction} from '../constants/types/flux'
-import {Map} from 'immutable'
 import {loginTab} from '../constants/tabs'
 import {navigateTo} from '../actions/route-tree'
 import type {NavigateTo} from '../constants/route-tree'

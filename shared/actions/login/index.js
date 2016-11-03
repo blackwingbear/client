@@ -2,7 +2,6 @@
 import * as CommonConstants from '../../constants/common'
 import * as Constants from '../../constants/login'
 import HiddenString from '../../util/hidden-string'
-import React from 'react'
 import engine from '../../engine'
 import openURL from '../../util/open-url'
 import type {DeviceRole} from '../../constants/login'
@@ -10,7 +9,6 @@ import type {DeviceType} from '../../constants/types/more'
 import type {Dispatch, GetState, AsyncAction, TypedAction, Action} from '../../constants/types/flux'
 import type {incomingCallMapType, DeviceType as RPCDeviceType} from '../../constants/types/flow-types'
 import type {ResponseType} from '../../engine'
-import {Map} from 'immutable'
 import {bootstrap} from '../config'
 import {defaultModeForDeviceRoles, qrGenerate} from './provision-helpers'
 import {mainTab, devicesTab, loginTab} from '../../constants/tabs'
@@ -21,7 +19,7 @@ import {loginRecoverAccountFromEmailAddressRpc, loginLoginRpc, loginLogoutRpc,
   ConstantsStatusCode, ProvisionUiGPGMethod, ProvisionUiDeviceType,
   PassphraseCommonPassphraseType,
 } from '../../constants/types/flow-types'
-import {navigateTo, navigateAppend, navigateUp} from '../route-tree'
+import {navigateTo} from '../route-tree'
 import {overrideLoggedInTab} from '../../local-debug'
 
 const InputCancelError = {desc: 'Cancel Login', code: ConstantsStatusCode.scinputcanceled}
@@ -84,7 +82,6 @@ export function login (): AsyncAction {
   // See FIXME about HMR at the bottom of this file
   return (dispatch, getState) => {
     function loginSubmit (usernameOrEmail: string) {
-      const Error = require('../../login/register/error').default
       const deviceType: DeviceType = isMobile ? 'mobile' : 'desktop'
       const onBack = response => { dispatch(cancelLogin(response)) }
       const onProvisionerSuccess = () => { dispatch(navBasedOnLoginState()) }
@@ -364,7 +361,6 @@ export function addNewComputer () : AsyncAction {
 }
 
 export function addNewPaperKey () : Action {
-  //TODO: test
   return navigateTo([mainTab, devicesTab, 'genPaperKey'])
 }
 

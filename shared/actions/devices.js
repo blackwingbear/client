@@ -1,10 +1,10 @@
 // @flow
 import * as Constants from '../constants/devices'
 import HiddenString from '../util/hidden-string'
-import {Map, is} from 'immutable'
+import {is} from 'immutable'
 import {mainTab, devicesTab, loginTab} from '../constants/tabs'
 
-import {navigateTo, navigateUp} from './route-tree'
+import {navigateTo} from './route-tree'
 import {setRevokedSelf} from './login'
 import {takeEvery, takeLatest} from 'redux-saga'
 import {call, put, select, fork} from 'redux-saga/effects'

@@ -1,5 +1,4 @@
 // @flow
-type MainTab = 'tabs:mainTab'
 export const mainTab = 'tabs:mainTab'
 type StartupTab = 'tabs:startupTab'
 export const startupTab = 'tabs:startupTab'
@@ -7,7 +6,6 @@ type ChatTab = 'tabs:chatTab'
 export const chatTab = 'tabs:chatTab'
 type LoginTab = 'tabs:loginTab'
 export const loginTab = 'tabs:loginTab'
-//TODO cleanup
 
 type ProfileTab = 'tabs:profile'
 export const profileTab = 'tabs:profile'
@@ -23,7 +21,7 @@ type SettingsTab = 'tabs:settingsTab'
 export const settingsTab = 'tabs:settingsTab'
 
 const prettyNames = {
-  [startupTab]: null,  // FIXME: unused?
+  [startupTab]: null,  //FIXME: unused?
   [folderTab]: 'Folders',
   [chatTab]: 'Chat',
   [peopleTab]: 'People',
@@ -46,6 +44,7 @@ export type Tabs = VisibleTab
 | LoginTab
 
 export function prettify (tabName: string) {
+  //TODO: cleanup?
   return prettyNames[tabName] || 'You have found a bug'
 }
 
