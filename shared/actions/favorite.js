@@ -4,7 +4,7 @@ import _ from 'lodash'
 import {NotifyPopup} from '../native/notifications'
 import {apiserverGetRpcPromise, favoriteFavoriteAddRpcPromise, favoriteFavoriteIgnoreRpcPromise} from '../constants/types/flow-types'
 import {badgeApp} from './notifications'
-import {navigateBack} from '../actions/router'
+import {navigateUp} from '../actions/route-tree'
 import {call, put, select} from 'redux-saga/effects'
 import {takeLatest, takeEvery} from 'redux-saga'
 
@@ -171,10 +171,10 @@ function * _addSaga (action: FavoriteAdd): SagaGenerator<any, any> {
       yield call(favoriteFavoriteAddRpcPromise, {param: {folder}})
       const action: FavoriteAdded = {type: Constants.favoriteAdded, payload: undefined}
       yield put(action)
-      yield put(navigateBack())
+      yield put(navigateUp())
     } catch (error) {
       console.warn('Err in favorite.favoriteAdd', error)
-      yield put(navigateBack())
+      yield put(navigateUp())
     }
   }
 }
@@ -190,10 +190,10 @@ function * _ignoreSaga (action: FavoriteAdd): SagaGenerator<any, any> {
       yield call(favoriteFavoriteIgnoreRpcPromise, {param: {folder}})
       const action: FavoriteIgnored = {type: Constants.favoriteIgnored, payload: undefined}
       yield put(action)
-      yield put(navigateBack())
+      yield put(navigateUp())
     } catch (error) {
       console.warn('Err in favorite.favoriteIgnore', error)
-      yield put(navigateBack())
+      yield put(navigateUp())
     }
   }
 }
