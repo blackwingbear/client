@@ -417,10 +417,6 @@ export function openAccountResetPage () : AsyncAction {
 
 type SimpleCB = () => void
 function makeKex2IncomingMap (dispatch, getState, onBack: SimpleCB, onProvisionerSuccess: SimpleCB) : incomingCallMapType {
-  function appendRouteElement (element: React$Element<any>) {
-    dispatch(routeAppend({parseRoute: {componentAtTop: {element}}}))
-  }
-
   // FIXME (mbg): The above usage of React components in the action code causes
   // a module dependency which prevents HMR. We can't hot reload action code,
   // so when these views (or more likely, their subcomponents from
