@@ -19,7 +19,7 @@ import {globalStyles, globalColors, navBarHeight} from './styles/index.native'
 import {listenForNotifications} from './actions/notifications'
 import {mapValues} from 'lodash'
 import {navigateTo, navigateUp, switchTab} from './actions/router'
-import {startupTab, profileTab, folderTab, chatTab, peopleTab, devicesTab, settingsTab, loginTab} from './constants/tabs'
+import {profileTab, folderTab, chatTab, peopleTab, devicesTab, settingsTab, loginTab} from './constants/tabs'
 import GlobalError from './global-errors/container'
 
 import type {VisibleTab} from './constants/tabs'
@@ -147,10 +147,6 @@ class Nav extends Component {
     }
 
     const {module} = tabs[activeTab]
-    if (activeTab === startupTab) {
-      return this._renderContent(activeTab, module)
-    }
-
     const tabContent = mapValues(tabs, ({module}, tab) => (activeTab === tab && this._renderContent(tab, module)))
 
     return (
