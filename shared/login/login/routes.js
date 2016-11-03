@@ -46,7 +46,7 @@ const routeTree = new RouteDefNode({
     success: {
       component: Success,
     },
-  }
+  },
 })
 
 export default routeTree

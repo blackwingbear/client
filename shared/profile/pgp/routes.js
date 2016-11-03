@@ -25,11 +25,11 @@ const routeTree = new RouteDefNode({
             finished: {
               component: ConnectedFinished,
             },
-          }
+          },
         },
-      }
+      },
     },
-  }
+  },
 })
 
 export default routeTree

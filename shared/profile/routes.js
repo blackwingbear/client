@@ -46,7 +46,7 @@ const routeTree = new RouteDefNode({
       component: ConfirmOrPending,
     },
     pgp: pgpRoutes,
-  }
+  },
 })
 
 export default routeTree

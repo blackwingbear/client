@@ -74,7 +74,7 @@ const _RouteStateNode = I.Record({
 })
 
 export class RouteStateNode extends _RouteStateNode {
-  constructor (data: RouteStateParams) {
+  constructor (data: RouteStateParams) {  // eslint-disable-line no-useless-constructor
     super(data)
   }
 

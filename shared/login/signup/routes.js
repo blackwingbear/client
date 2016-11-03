@@ -36,7 +36,7 @@ const routeTree = new RouteDefNode({
     signupError: {
       component: SignupError,
     },
-  }
+  },
 })
 
 export default routeTree

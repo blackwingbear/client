@@ -23,7 +23,7 @@ const connector: Connector<RouteProps<OwnProps, *>, {waitingForResponse: $Proper
   (state: TypedState, {routeProps: {onBack, onSubmit}}: RouteProps<OwnProps, *>) => ({
     onBack,
     onSubmit,
-    waitingForResponse: state.login.waitingForResponse
+    waitingForResponse: state.login.waitingForResponse,
   })
 )
 

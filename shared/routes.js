@@ -31,8 +31,8 @@ const routeTree = new RouteDefNode({
         [searchTab]: searchRoutes,
         [settingsTab]: settingsRoutes,
       },
-    }
-  }
+    },
+  },
 })
 
 export default routeTree

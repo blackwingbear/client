@@ -49,6 +49,6 @@ export default connect(
     switchTab: (tab: VisibleTab) => {
       const action = routeSelected === tab ? navigateReset : switchTo
       dispatch(action(routePath.push(tab)))
-    }
+    },
   })
 )(Nav)
