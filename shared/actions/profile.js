@@ -9,7 +9,7 @@ import {call, put, take, race, select} from 'redux-saga/effects'
 import {getMyProfile} from './tracker'
 import {isValidEmail, isValidName} from '../util/simple-validators'
 import {navigateUp, navigateTo, navigateAppend} from '../actions/route-tree'
-import {profileTab} from '../constants/tabs'
+import {mainTab, profileTab} from '../constants/tabs'
 import {takeLatest, takeEvery} from 'redux-saga'
 import {singleFixedChannelConfig, closeChannelMap, takeFromChannelMap} from '../util/saga'
 
@@ -25,6 +25,8 @@ const InputCancelError = {desc: 'Cancel Add Proof', code: ConstantsStatusCode.sc
 // Soon to be saga-ed away. We bookkeep the respsonse object in the incomingCallMap so we can call it in our actions
 let promptUsernameResponse: ?Object = null
 let outputInstructionsResponse: ?Object = null
+
+const baseRoute = [mainTab, profileTab]
 
 function editProfile (bio: string, fullname: string, location: string): AsyncAction {
   return (dispatch) => {
@@ -157,13 +159,13 @@ function _updateSigID (sigID: SigID): UpdateSigID {
 
 function _askTextOrDNS (): AsyncAction {
   return (dispatch) => {
-    dispatch(navigateTo([{selected: 'proveWebsiteChoice'}], [profileTab]))
+    dispatch(navigateTo([{selected: 'proveWebsiteChoice'}], baseRoute))
   }
 }
 
 function _registerBTC (): AsyncAction {
   return (dispatch) => {
-    dispatch(navigateTo([{selected: 'proveEnterUsername'}], [profileTab]))
+    dispatch(navigateTo([{selected: 'proveEnterUsername'}], baseRoute))
   }
 }
 
@@ -189,7 +191,7 @@ function submitBTCAddress (): AsyncAction {
           dispatch(_updateErrorText(error.desc, error.code))
         } else {
           dispatch(_updateProofStatus(true, ProveCommonProofStatus.ok))
-          dispatch(navigateTo([{selected: 'confirmOrPending'}], [profileTab]))
+          dispatch(navigateTo([{selected: 'confirmOrPending'}], baseRoute))
         }
       },
     })
@@ -213,7 +215,7 @@ function _addServiceProof (service: ProvablePlatformsType): AsyncAction {
           if (prevError) {
             dispatch(_updateErrorText(prevError.desc, prevError.code))
           }
-          dispatch(navigateTo([{selected: 'proveEnterUsername'}], [profileTab]))
+          dispatch(navigateTo([{selected: 'proveEnterUsername'}], baseRoute))
         },
         'keybase.1.proveUi.outputInstructions': ({instructions, proof}, response) => {
           if (service === 'dnsOrGenericWebSite') { // We don't get this directly (yet) so we parse this out
@@ -228,7 +230,7 @@ function _addServiceProof (service: ProvablePlatformsType): AsyncAction {
 
           dispatch(_updateProofText(proof))
           outputInstructionsResponse = response
-          dispatch(navigateTo([{selected: 'postProof'}], [profileTab]))
+          dispatch(navigateTo([{selected: 'postProof'}], baseRoute))
         },
         'keybase.1.proveUi.promptOverwrite': (_, response) => { response.result(true) },
         'keybase.1.proveUi.outputPrechecks': (_, response) => { response.result() },
@@ -430,7 +432,7 @@ function _checkProof (sigID: string, currentlyAdding: boolean): AsyncAction {
               dispatch(_updateErrorText("We couldn't find your proof. Please retry!"))
             } else {
               dispatch(_updateProofStatus(found, status))
-              dispatch(navigateTo([{selected: 'confirmOrPending'}], [profileTab]))
+              dispatch(navigateTo([{selected: 'confirmOrPending'}], baseRoute))
             }
           }
         }
@@ -574,7 +576,7 @@ function * dropPgpSaga (action: DropPgp): SagaGenerator<any, any> {
     yield put(_revokedWaitingForResponse(true))
     yield call(dropPgpWithService, kid)
     yield put(_revokedWaitingForResponse(false))
-    yield put(navigateTo([]))
+    yield put(navigateTo([mainTab]))
   } catch (e) {
     yield put(_revokedWaitingForResponse(false))
     yield put(_revokedErrorResponse(`Error in dropping Pgp Key: ${e}`))
@@ -602,7 +604,7 @@ function * generatePgpSaga (): SagaGenerator<any, any> {
 
     if (cancel) {
       closeChannelMap(generatePgpKeyChanMap)
-      yield put(navigateTo([], [profileTab]))
+      yield put(navigateTo([], baseRoute))
       return
     }
 
@@ -624,7 +626,7 @@ function * generatePgpSaga (): SagaGenerator<any, any> {
     const {response: finishedResponse} = yield takeFromChannelMap(generatePgpKeyChanMap, 'keybase.1.pgpUi.finished')
     yield call([finishedResponse, finishedResponse.result])
 
-    yield put(navigateTo([], [profileTab]))
+    yield put(navigateTo([], baseRoute))
   } catch (e) {
     closeChannelMap(generatePgpKeyChanMap)
     console.log('error in generating pgp key', e)

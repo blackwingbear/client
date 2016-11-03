@@ -2,7 +2,7 @@
 import * as Constants from '../constants/devices'
 import HiddenString from '../util/hidden-string'
 import {Map, is} from 'immutable'
-import {devicesTab, loginTab} from '../constants/tabs'
+import {mainTab, devicesTab, loginTab} from '../constants/tabs'
 
 import {navigateTo, navigateUp} from './route-tree'
 import {setRevokedSelf} from './login'
@@ -81,7 +81,7 @@ function * _deviceRemoveSaga (removeAction: RemoveDevice): SagaGenerator<any, an
         }: DeviceRemoved))
       }
       yield call(loginDeprovisionRpcPromise, {param: {username, doRevoke: true}})
-      yield put(navigateTo([loginTab]))
+      yield put(navigateTo([mainTab, loginTab]))
       yield put(setRevokedSelf(name))
       yield put(({
         type: Constants.deviceRemoved,
@@ -118,7 +118,7 @@ function * _deviceRemoveSaga (removeAction: RemoveDevice): SagaGenerator<any, an
 
   const afterRouteState = yield select(state => state.routeTree.routeState)
   if (is(beforeRouteState, afterRouteState)) {
-    yield put(navigateTo([devicesTab]))
+    yield put(navigateTo([mainTab, devicesTab]))
   }
 }
 

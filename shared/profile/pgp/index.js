@@ -9,6 +9,7 @@ import {Map} from 'immutable'
 import {TypedConnector} from '../../util/typed-connect'
 import {updatePgpInfo, generatePgp} from '../../actions/profile'
 import {navigateUp, navigateTo, navigateAppend} from '../../actions/route-tree'
+import {mainTab} from '../../constants/tabs'
 import * as Constants from '../../constants/profile'
 
 import type {Props as ProvePgpChoiceProps, Options as ProvePgpChoiceOptions} from './prove-pgp-choice'

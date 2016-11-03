@@ -1,4 +1,6 @@
 // @flow
+type MainTab = 'tabs:mainTab'
+export const mainTab = 'tabs:mainTab'
 type StartupTab = 'tabs:startupTab'
 export const startupTab = 'tabs:startupTab'
 type ChatTab = 'tabs:chatTab'
@@ -21,7 +23,7 @@ type SettingsTab = 'tabs:settingsTab'
 export const settingsTab = 'tabs:settingsTab'
 
 const prettyNames = {
-  [startupTab]: null,
+  [startupTab]: null,  // FIXME: unused?
   [folderTab]: 'Folders',
   [chatTab]: 'Chat',
   [peopleTab]: 'People',

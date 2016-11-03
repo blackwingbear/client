@@ -9,7 +9,7 @@ import type {RouteAppend} from '../constants/router'
 import type {TypedAsyncAction, AsyncAction} from '../constants/types/flux'
 import {Map} from 'immutable'
 import {loginTab} from '../constants/tabs'
-import {routeAppend, navigateUp} from '../actions/router'
+import {navigateTo} from '../actions/route-tree'
 import {signupSignupRpc, signupCheckInvitationCodeRpc, signupCheckUsernameAvailableRpc,
   signupInviteRequestRpc, deviceCheckDeviceNameFormatRpc} from '../constants/types/flow-types'
 import {isValidEmail, isValidName, isValidUsername} from '../util/simple-validators'
@@ -18,7 +18,7 @@ function nextPhase (): TypedAsyncAction<RouteAppend> {
   return (dispatch, getState) => {
     // TODO careful here since this will not be sync on a remote component!
     const phase: string = getState().signup.phase
-    dispatch(routeAppend(phase))
+    dispatch(navigateTo([loginTab, 'signup', phase]))
   }
 }
 
@@ -304,8 +304,7 @@ export function resetSignup (): ResetSignup {
 export function restartSignup (): TypedAsyncAction<RestartSignup | RouteAppend> {
   return dispatch => new Promise((resolve, reject) => {
     dispatch({type: Constants.restartSignup, payload: {}})
-    dispatch(navigateUp(loginTab, Map({path: 'signup'})))
-    dispatch(navigateUp())
+    dispatch(navigateTo([loginTab]))
     resolve()
   })
 }
